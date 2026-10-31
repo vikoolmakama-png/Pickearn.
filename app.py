@@ -406,10 +406,38 @@ def withdraw():
         try:
             with db() as conn:
                 with conn.cursor() as cur:
+                    cur.execute(
+                        "SELECT balance FROM users WHERE id=%s FOR UPDATE",
+                        (user_id,)
+                    )
+                    user_balance = cur.fetchone()
+
+                    if not user_balance:
+                        flash('User account not found.')
+                        return redirect('/withdraw')
+
+                    balance = user_balance[0]
+
+                    if amount > balance:
+                        flash('Insufficient balance for this withdrawal.')
+                        return redirect('/withdraw')
+
+                    cur.execute("""
+                        UPDATE users
+                        SET balance=balance-%s
+                        WHERE id=%s AND balance >= %s
+                        RETURNING id
+                    """, (amount, user_id, amount))
+
+                    if not cur.fetchone():
+                        flash('Insufficient balance for this withdrawal.')
+                        return redirect('/withdraw')
+
                     cur.execute("""
                         INSERT INTO withdrawals
                         (user_id, bank_name, account_number, account_name, amount, status)
                         VALUES (%s, %s, %s, %s, %s, 'pending')
+                        RETURNING id
                     """, (
                         user_id,
                         bank_name,
@@ -417,6 +445,13 @@ def withdraw():
                         account_name,
                         amount
                     ))
+                    withdrawal_id = cur.fetchone()[0]
+
+                    cur.execute("""
+                        INSERT INTO transactions
+                        (user_id, amount, transaction_type, reference)
+                        VALUES (%s, %s, 'withdrawal', %s)
+                    """, (user_id, -amount, 'WDR-' + str(withdrawal_id)))
 
             flash('Withdrawal request submitted. It is waiting for admin review.')
 
@@ -766,22 +801,17 @@ def admin_withdrawal_action(item_id, action):
                     flash('This withdrawal has already been reviewed.')
                     return redirect('/admin')
 
-                if action == 'approve':
+                if action == 'reject':
                     cur.execute("""
-                        UPDATE users SET balance=balance-%s
-                        WHERE id=%s AND balance >= %s
-                        RETURNING id
-                    """, (item[2], item[1], item[2]))
-
-                    if not cur.fetchone():
-                        flash('Cannot approve: user has insufficient balance.')
-                        return redirect('/admin')
+                        UPDATE users SET balance=balance+%s
+                        WHERE id=%s
+                    """, (item[2], item[1]))
 
                     cur.execute("""
                         INSERT INTO transactions
                         (user_id, amount, transaction_type, reference)
-                        VALUES (%s,%s,'withdrawal','WDR-' || %s)
-                    """, (item[1], -item[2], str(item_id)))
+                        VALUES (%s, %s, 'withdrawal_refund', %s)
+                    """, (item[1], item[2], 'WDR-REFUND-' + str(item_id)))
 
                 cur.execute("""
                     UPDATE withdrawals SET status=%s WHERE id=%s
