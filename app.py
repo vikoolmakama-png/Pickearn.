@@ -16,7 +16,6 @@ def db():
         return psycopg2.connect(
             database_url,
             sslmode="require",
-            options="-c search_path=public"
         )
 
     return psycopg2.connect(
