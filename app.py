@@ -13,7 +13,11 @@ app.secret_key = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
 def db():
     database_url = os.environ.get("DATABASE_URL")
     if database_url:
-        return psycopg2.connect(database_url, sslmode="require")
+        return psycopg2.connect(
+            database_url,
+            sslmode="require",
+            options="-c search_path=public"
+        )
 
     return psycopg2.connect(
         dbname=os.environ.get("DB_NAME", "pickearn"),
