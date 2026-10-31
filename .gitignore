@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+*.backup
+*.backup_*
+*.before_*
+*.deposit-backup
+*.referral-backup
+*.sql
+*.dump
+app.py.predeploy-backup

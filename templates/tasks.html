@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PickEarn Tasks</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo">Pick<span>Earn</span></div>
+  <a href="/dashboard" class="nav-login">Dashboard</a>
+</nav>
+<div class="dashboard">
+  <h2>Available Tasks</h2>
+  <p class="subtitle">Complete tasks and submit your username for review.</p>
+  <div class="plan-card">
+    <h3>{{plan.name}} Plan</h3>
+    <div class="reward">₦{{plan.reward_per_task}} per approved task</div>
+  </div>
+  {% for task in tasks %}
+  <div class="plan-card">
+    <h3>{{task.title}}</h3>
+    <p>{{task.description or ''}}</p>
+    <a href="{{task.task_link}}" target="_blank" rel="noopener noreferrer">OPEN TASK</a>
+    <form method="POST" action="/submit-task/{{task.id}}">
+      <label>Your username used for this task</label>
+      <input type="text" name="submitted_username" maxlength="100" required placeholder="Enter your username">
+      <button type="submit">SUBMIT TASK</button>
+    </form>
+  </div>
+  {% else %}
+  <div class="plan-card">
+    <h3>No tasks available</h3>
+    <p>New tasks will appear here. Submitted tasks disappear while awaiting review.</p>
+  </div>
+  {% endfor %}
+</div>
+</body>
+</html>

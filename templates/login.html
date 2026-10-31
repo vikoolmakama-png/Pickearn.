@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login - PickEarn</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="form-box">
+<h1>Pick<span>Earn</span></h1>
+<h2>Welcome Back</h2>
+<p>Login to your account.</p>
+
+{% with messages = get_flashed_messages() %}
+{% for message in messages %}
+<div class="error">{{message}}</div>
+{% endfor %}
+{% endwith %}
+
+<form method="POST">
+<input name="username" placeholder="Username or phone number" required>
+<input type="password" name="password" placeholder="Password" required>
+<button type="submit">LOGIN</button>
+</form>
+
+<p>Don't have an account? <a href="/register">Register</a></p>
+</div>
+</body>
+</html>

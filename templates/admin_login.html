@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PickEarn | Admin Login</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    background:
+        radial-gradient(circle at 20% 20%, #063c80 0%, transparent 35%),
+        radial-gradient(circle at 80% 80%, #061d55 0%, transparent 35%),
+        #030916;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 410px;
+}
+
+.login-card {
+    padding: 40px 28px;
+    border: 1px solid rgba(0, 140, 255, 0.4);
+    border-radius: 22px;
+    background: rgba(8, 24, 48, 0.88);
+    box-shadow:
+        0 0 25px rgba(0, 119, 255, 0.25),
+        0 0 65px rgba(0, 119, 255, 0.12);
+    backdrop-filter: blur(15px);
+}
+
+.logo {
+    width: 68px;
+    height: 68px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #008cff, #0045d9);
+    box-shadow: 0 0 28px rgba(0, 140, 255, 0.65);
+    font-size: 30px;
+    font-weight: bold;
+}
+
+h2 {
+    text-align: center;
+    font-size: 27px;
+    margin-bottom: 9px;
+    color: #fff;
+    text-shadow: 0 0 15px #008cff;
+}
+
+.subtitle {
+    text-align: center;
+    color: #9bb9dc;
+    font-size: 14px;
+    margin-bottom: 32px;
+}
+
+.admin-label {
+    display: block;
+    text-align: center;
+    color: #36aaff;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    color: #c5dafa;
+    font-size: 13px;
+    margin: 0 0 9px 3px;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 21px;
+    border: 1px solid #183d68;
+    border-radius: 11px;
+    outline: none;
+    background: #07172b;
+    color: white;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #008cff;
+    box-shadow: 0 0 14px rgba(0, 140, 255, 0.35);
+}
+
+input::placeholder {
+    color: #6683a5;
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 11px;
+    background: linear-gradient(90deg, #007bff, #0052df);
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(0, 119, 255, 0.4);
+    transition: 0.3s;
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+button:hover {
+    box-shadow: 0 0 30px rgba(0, 140, 255, 0.75);
+}
+
+.footer {
+    text-align: center;
+    margin-top: 27px;
+    color: #607d9f;
+    font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+<div class="login-container">
+    <div class="login-card">
+
+        <div class="logo">P</div>
+
+        <span class="admin-label">SECURE ADMIN PORTAL</span>
+
+        <h2>PickEarn Admin</h2>
+        <p class="subtitle">Welcome back, administrator.</p>
+
+        <form method="POST">
+            <label for="username">Admin Username</label>
+            <input
+                id="username"
+                name="username"
+                type="text"
+                placeholder="Enter admin username"
+                autocomplete="username"
+                required
+            >
+
+            <label for="password">Admin Password</label>
+            <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Enter admin password"
+                autocomplete="current-password"
+                required
+            >
+
+            <button type="submit">SIGN IN</button>
+        </form>
+
+        <div class="footer">
+            PickEarn &copy; 2026 · Admin Access
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Referrals - PickEarn</title>
+<link rel="stylesheet" href="/static/style.css">
+<style>
+.ref-wrap{max-width:650px;margin:30px auto;padding:20px}
+.ref-box{background:#101d38;border:1px solid #1d4ed8;border-radius:15px;padding:22px;margin-bottom:20px}
+.ref-link{width:100%;box-sizing:border-box;padding:13px;background:#081329;color:white;border:1px solid #31558b;border-radius:8px;margin:12px 0}
+.ref-button{width:100%;padding:14px;background:#087cff;color:white;border:0;border-radius:9px;font-weight:bold}
+.ref-item{padding:14px 0;border-bottom:1px solid #294064}
+.back-link{color:#70b5ff}
+.earning{color:#4ade80;font-size:28px}
+</style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo">Pick<span>Earn</span></div>
+    <a href="/dashboard" class="nav-login">Dashboard</a>
+</nav>
+
+<div class="ref-wrap">
+    <h2>Referral Program</h2>
+
+    <div class="ref-box">
+        <h3>Total Referral Earnings</h3>
+        <h1 class="earning">₦{{ "%.2f"|format(earnings) }}</h1>
+        <p>You have invited {{ referral_count }} people.</p>
+    </div>
+
+    <div class="ref-box">
+        <h3>Earn 50% Commission</h3>
+        <p>Starter activation: <strong>₦500</strong></p>
+        <p>Premium activation: <strong>₦1,500</strong></p>
+        <p>Earn automatically when someone you invite successfully activates a plan.</p>
+    </div>
+
+    <div class="ref-box">
+        <h3>Your Referral Code</h3>
+        <h2>{{ referral_code }}</h2>
+        <h3>Your Registration Link</h3>
+        <input class="ref-link" id="refLink" value="{{ referral_link }}" readonly>
+        <button class="ref-button" onclick="copyLink()">COPY REGISTRATION LINK</button>
+        <p id="copyMessage"></p>
+    </div>
+
+    <div class="ref-box">
+        <h3>Referral Commission History</h3>
+        {% if commission_history %}
+            {% for item in commission_history %}
+            <div class="ref-item">
+                <strong>{{ item.username }}</strong>
+                <p>{{ item.plan_name or 'Activated plan' }}</p>
+                <strong class="earning">+₦{{ "%.2f"|format(item.amount) }}</strong>
+                <p><small>{{ item.created_at }}</small></p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No referral commissions yet. Share your link to get started.</p>
+        {% endif %}
+    </div>
+
+    <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+</div>
+
+<script>
+function copyLink() {
+    const field = document.getElementById('refLink');
+    field.select();
+    field.setSelectionRange(0, 99999);
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(field.value).then(showCopied);
+    } else {
+        document.execCommand('copy');
+        showCopied();
+    }
+}
+function showCopied() {
+    document.getElementById('copyMessage').textContent = 'Registration link copied!';
+}
+</script>
+</body>
+</html>

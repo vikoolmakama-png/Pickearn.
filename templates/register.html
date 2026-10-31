@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Join PickEarn</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="form-box">
+<h1>Pick<span>Earn</span></h1>
+<h2>Create your account</h2>
+<p>Start your PickEarn journey.</p>
+
+{% with messages = get_flashed_messages() %}
+{% for message in messages %}
+<div class="error">{{message}}</div>
+{% endfor %}
+{% endwith %}
+
+<form method="POST">
+<input name="phone" placeholder="Phone number" required>
+<input name="username" placeholder="Username" required>
+<input type="password" name="password" placeholder="Password (8 characters minimum)" required>
+<input type="password" name="confirm" placeholder="Confirm password" required>
+<input name="referral" placeholder="Referral code (optional)">
+<button type="submit">CREATE ACCOUNT</button>
+</form>
+
+<p>Already registered? <a href="/login">Login</a></p>
+</div>
+</body>
+</html>

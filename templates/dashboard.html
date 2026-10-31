@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PickEarn Dashboard</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Pick<span>Earn</span></div>
+    <a href="/logout" class="nav-login">Logout</a>
+</nav>
+
+<div class="dashboard">
+
+<h2>Welcome, {{user.username}}</h2>
+
+<div class="balance">
+    <p>AVAILABLE BALANCE</p>
+    <h1>₦{{ "%.2f"|format(user.balance) }}</h1>
+</div>
+
+<div class="dash-grid">
+    <a href="/deposit" class="dash-card">💳<br>Deposit</a>
+    <a href="/withdraw" class="dash-card">💸<br>Withdraw</a>
+    <a href="/tasks" class="dash-card">⚡<br>Tasks</a>
+    <a href="/referrals" class="dash-card">👥<br>Referrals</a>
+</div>
+
+<div class="plans-section">
+
+<h2>Choose Your Plan</h2>
+<p class="subtitle">Activate a plan to unlock tasks.</p>
+
+{% with messages = get_flashed_messages() %}
+{% for message in messages %}
+<div class="error">{{message}}</div>
+{% endfor %}
+{% endwith %}
+
+{% if plan %}
+<div class="active-plan">
+    <div class="active-badge">● ACTIVE PLAN</div>
+    <h2>{{plan.name}}</h2>
+    <h3>₦{{plan.price}} activation</h3>
+    <p>₦{{plan.reward_per_task}} per approved task</p>
+    <a href="/tasks" class="btn-primary">START TASKS</a>
+</div>
+
+{% else %}
+
+<div class="plan-card">
+    <div class="plan-tag">STARTER</div>
+    <h1>₦1,000</h1>
+    <p>Activation fee</p>
+    <div class="reward">₦150 per task</div>
+
+    <form method="POST" action="/activate-plan/{{plans[0].id}}">
+        <button class="activate-btn">ACTIVATE PLAN</button>
+    </form>
+</div>
+
+<div class="plan-card premium">
+    <div class="plan-tag">PREMIUM</div>
+    <h1>₦3,000</h1>
+    <p>Activation fee</p>
+    <div class="reward">₦250 per task</div>
+
+    <form method="POST" action="/activate-plan/{{plans[1].id}}">
+        <button class="activate-btn">ACTIVATE PLAN</button>
+    </form>
+</div>
+
+{% endif %}
+</div>
+
+</div>
+</body>
+</html>

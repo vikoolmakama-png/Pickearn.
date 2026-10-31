@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Withdraw - PickEarn</title>
+<link rel="stylesheet" href="/static/style.css">
+<style>
+.withdraw-wrap {
+    max-width: 650px;
+    margin: 35px auto;
+    padding: 20px;
+}
+.withdraw-box, .history-box {
+    background: #101d38;
+    border: 1px solid #1d4ed8;
+    border-radius: 15px;
+    padding: 22px;
+    margin-bottom: 22px;
+    box-shadow: 0 0 18px rgba(0,100,255,.12);
+}
+.withdraw-box input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    margin: 12px 0;
+    border-radius: 9px;
+    border: 1px solid #31558b;
+    background: #081329;
+    color: white;
+    font-size: 16px;
+}
+.withdraw-box button {
+    width: 100%;
+    padding: 14px;
+    border: 0;
+    border-radius: 9px;
+    background: #087cff;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 10px;
+}
+.minimum {
+    color: #7db8ff;
+    margin-bottom: 15px;
+}
+.notice {
+    background: #172d50;
+    padding: 12px;
+    border-radius: 8px;
+    color: #b9d7ff;
+    line-height: 1.5;
+}
+.history-item {
+    border-bottom: 1px solid #294064;
+    padding: 14px 0;
+    overflow-wrap: anywhere;
+}
+.history-item:last-child { border-bottom: 0; }
+.pending { color: #ffc857; }
+.approved { color: #4ade80; }
+.rejected { color: #ff7777; }
+.back-link { color: #70b5ff; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Pick<span>Earn</span></div>
+    <a href="/dashboard" class="nav-login">Dashboard</a>
+</nav>
+
+<div class="withdraw-wrap">
+
+<h2>Withdraw Funds</h2>
+
+<div class="withdraw-box">
+    <h3>Available Balance</h3>
+    <h2>₦{{ "%.2f"|format(user.balance) }}</h2>
+
+    <p class="minimum">Minimum withdrawal: ₦300</p>
+
+    <div class="notice">
+        Your request will be sent for admin review.
+        Money will not be deducted until the admin approves it.
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p class="notice">{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST" action="/withdraw">
+        <input type="text" name="bank_name"
+               placeholder="Bank name" maxlength="100" required>
+
+        <input type="text" name="account_number"
+               placeholder="Account number" maxlength="20"
+               inputmode="numeric" required>
+
+        <input type="text" name="account_name"
+               placeholder="Account name" maxlength="100" required>
+
+        <input type="number" name="amount"
+               placeholder="Withdrawal amount (₦)"
+               min="300" step="0.01" required>
+
+        <button type="submit">SUBMIT WITHDRAWAL</button>
+    </form>
+</div>
+
+<div class="history-box">
+    <h3>Withdrawal History</h3>
+
+    {% if history %}
+        {% for item in history %}
+        <div class="history-item">
+            <strong>₦{{ "%.2f"|format(item.amount) }}</strong>
+            <p>Bank: {{ item.bank_name }}</p>
+            <p>Account: {{ item.account_number }}</p>
+            <p>Name: {{ item.account_name }}</p>
+            <p>Status:
+                <strong class="{{ item.status|lower }}">
+                    {{ item.status|capitalize }}
+                </strong>
+            </p>
+            <small>{{ item.created_at }}</small>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No withdrawal requests yet.</p>
+    {% endif %}
+</div>
+
+<a href="/dashboard" class="back-link">← Back to Dashboard</a>
+
+</div>
+</body>
+</html>

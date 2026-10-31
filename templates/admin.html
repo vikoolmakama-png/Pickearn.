@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PickEarn Admin Dashboard</title>
+<link rel="stylesheet" href="/static/style.css">
+<style>
+.admin-section{margin:20px auto;max-width:900px;padding:18px;background:#101c35;border:1px solid #2457a6;border-radius:14px;overflow-x:auto}
+.admin-section table{width:100%;border-collapse:collapse;min-width:560px}
+.admin-section th,.admin-section td{padding:10px;border-bottom:1px solid #29405e;text-align:left}
+.admin-section input,.admin-section textarea{width:100%;padding:12px;margin:7px 0;box-sizing:border-box}
+.admin-section button{margin:4px;padding:9px 12px}
+.admin-section a{color:#70baff}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo">Pick<span>Earn</span> Admin</div>
+  <a href="/admin/logout" class="nav-login">Logout</a>
+</nav>
+<div class="dashboard">
+  <h2>Admin Dashboard</h2>
+  <div class="plan-card"><h3>Total registered users</h3><div class="reward">{{total_users}}</div></div>
+
+  <section class="admin-section">
+    <h2>Create a task</h2>
+    <form method="POST" action="/admin/create-task">
+      <input name="title" maxlength="150" placeholder="Task title" required>
+      <input name="task_link" type="url" placeholder="Task link (https://...)" required>
+      <textarea name="description" placeholder="Task description"></textarea>
+      <button type="submit">CREATE TASK</button>
+    </form>
+  </section>
+
+  <section class="admin-section">
+    <h2>Pending deposits ({{deposits|length}})</h2>
+    {% for d in deposits %}
+    <p><b>{{d.username}}</b> — {{d.sender_name}} — ₦{{d.amount}} — {{d.created_at}}</p>
+    <form method="POST" action="/admin/deposit/{{d.id}}/approve" style="display:inline"><button>Approve & credit</button></form>
+    <form method="POST" action="/admin/deposit/{{d.id}}/reject" style="display:inline"><button>Reject</button></form>
+    <hr>
+    {% else %}<p>No pending deposits.</p>{% endfor %}
+  </section>
+
+  <section class="admin-section">
+    <h2>Pending withdrawals ({{withdrawals|length}})</h2>
+    {% for w in withdrawals %}
+    <p><b>{{w.username}}</b> — ₦{{w.amount}}<br>
+    {{w.bank_name}} | {{w.account_number}} | {{w.account_name}}</p>
+    <form method="POST" action="/admin/withdrawal/{{w.id}}/approve" style="display:inline"><button>Approve</button></form>
+    <form method="POST" action="/admin/withdrawal/{{w.id}}/reject" style="display:inline"><button>Reject</button></form>
+    <hr>
+    {% else %}<p>No pending withdrawals.</p>{% endfor %}
+  </section>
+
+  <section class="admin-section">
+    <h2>Pending task submissions ({{submissions|length}})</h2>
+    {% for s in submissions %}
+    <p><b>{{s.username}}</b> submitted <b>{{s.title}}</b><br>
+    Submitted username: {{s.submitted_username}}<br>
+    Plan: {{s.plan_name or 'No active plan'}} |
+    Reward if approved: ₦{{s.reward_per_task or 0}}<br>
+    {{s.submitted_at}}</p>
+    <form method="POST" action="/admin/submission/{{s.id}}/approve" style="display:inline"><button>Approve & pay</button></form>
+    <form method="POST" action="/admin/submission/{{s.id}}/reject" style="display:inline"><button>Reject</button></form>
+    <hr>
+    {% else %}<p>No pending submissions.</p>{% endfor %}
+  </section>
+
+  <section class="admin-section">
+    <h2>Created tasks</h2>
+    {% for t in task_list %}
+    <p>{{t.title}} — {% if t.active %}Active{% else %}Inactive{% endif %}<br>
+    <a href="{{t.task_link}}" target="_blank" rel="noopener noreferrer">Open task link</a></p>
+    {% else %}<p>No tasks created yet.</p>{% endfor %}
+  </section>
+</div>
+</body>
+</html>
